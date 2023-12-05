@@ -27,24 +27,28 @@
             </nav>
         </div>
 
-        <h1> Découvrez les Récits Cachés de Chaque Feuille, Témoins de Notre Existence</h1>
+        <h1> Discover the Hidden Stories of Each Leaf, Witnesses of Our Existence</h1>
 
         <div class="form">
 
             <form action="/" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
-                <label> Predict leafs of your farms !</label>
+                <h4> Capture a leaf, Identify the plant! </h4>
                 <br>
-                <label for="image">Choose an image:</label>
+                <label for="image">Select an image:</label>
                 <br>
                 <input type="file" name="image" accept=".jpg, .jpeg, .png" required onchange="previewImage(this);">
                 <!-- Add image preview container -->
                 <div id="image-preview"></div>
-
                 <br>
                 <button class="btn">Predict</button>
-
+                
+                {% if contour %}
+                <div id="contour-preview"></div>
+                {% endif %}
+                <br>
                 {% if prediction %}
-                <p style="font-size:18px "> This is a/an {{ prediction }} leaf</p>
+                <h5> Prediction: </h5>
+                <p style="font-size:16px ">This might be a {{ prediction }} leaf</p>
                 {% endif %}
                 {% if empty_image %}
                 <p>No image provided. Please upload an image.</p>
@@ -74,6 +78,18 @@
                 reader.readAsDataURL(file);
             }
         }
+
+        function previewContour(){
+            var contourPreview = document.getElementById('contour-preview');
+            contourPreview.innerHTML = ''; // Clear previous contour preview
+            var contourImage = document.createElement('img');
+            contourImage.src = '{{contour}}';
+            contourImage.style.maxWidth = '100%';
+            contourImage.style.maxHeight = '300px'; // Set the desired maximum height
+            contourPreview.appendChild(contourImage);
+        }
+        // Add event listener to the "Predict" button
+        document.querySelector('.btn').addEventListener('click', previewContour());
 
         function validateForm() {
             // Add any additional form validation logic if needed
